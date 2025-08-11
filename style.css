@@ -1,0 +1,1 @@
+body{font-family:Arial,Helvetica,sans-serif;margin:20px;color:#072}.header{display:flex;align-items:center;gap:12px}h1,h2{color:#0b5}a{color:#06c}label{display:block;margin:8px 0}input,textarea,select,button{padding:8px;margin-top:4px;width:100%;max-width:380px}button{cursor:pointer}table{border-collapse:collapse;margin-top:12px}

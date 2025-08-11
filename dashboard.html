@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>FitWell Dashboard</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <main>
+    <h2>Bookings</h2>
+    <button id="logout">Logout</button>
+    <table id="bookingsTable" border="1" cellpadding="8">
+      <thead><tr><th>Name</th><th>Phone</th><th>Service</th><th>Date</th><th>Notes</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </main>
+
+  <script>
+    document.getElementById('logout').addEventListener('click', () => {
+      localStorage.removeItem('token');
+      window.location.href = '/login.html';
+    });
+
+    async function loadBookings() {
+      const token = localStorage.getItem('token');
+      if (!token) return window.location.href = '/login.html';
+      const res = await fetch('/api/book', {
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      if (res.status === 401) {
+        alert('Unauthorized');
+        return window.location.href = '/login.html';
+      }
+      const bookings = await res.json();
+      const tbody = document.querySelector('#bookingsTable tbody');
+      tbody.innerHTML = '';
+      bookings.forEach(b => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${escapeHtml(b.name)}</td><td>${escapeHtml(b.phone)}</td><td>${escapeHtml(b.service)}</td><td>${escapeHtml(b.date || '')}</td><td>${escapeHtml(b.notes || '')}</td>`;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function escapeHtml(s) {
+      return String(s || '').replace(/[&<>"']/g, function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[m]});
+    }
+
+    loadBookings();
+  </script>
+</body>
+</html>
